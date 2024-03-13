@@ -26,7 +26,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./ThreadService/ThreadService.API/Dockerfile
+          context: ./ThreadService
+          file: ./ThreadService.API/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/forumapp-threads:latest
