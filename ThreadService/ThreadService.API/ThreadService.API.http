@@ -1,0 +1,6 @@
+@ThreadService.API_HostAddress = http://localhost:5267
+
+GET {{ThreadService.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
