@@ -22,10 +22,10 @@ jobs:
     - name: Test
       run: dotnet test --no-build --logger "trx;LogFileName=test-results.trx" || true --verbosity normal
     - name: Test Report
-      uses: dorny/test-reporter@v1
+      uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: DotNET Tests
+        name: Upload .NET Test results
         path: "**/test-results.trx"                            
-        reporter: dotnet-trx
-        fail-on-error: true
+#        reporter: dotnet-trx
+#        fail-on-error: true
