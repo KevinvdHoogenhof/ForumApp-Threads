@@ -4,7 +4,7 @@ Threadservice of the forum application
 
 ## SSL Certificate
 
-dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p mypass123  
+dotnet dev-certs https -ep %USERPROFILE%/.aspnet/https/aspnetapp.pfx -p mypass123  
 
 ## Database
 
