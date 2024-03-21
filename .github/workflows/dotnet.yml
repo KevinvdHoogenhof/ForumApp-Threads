@@ -25,6 +25,12 @@ jobs:
       run: dotnet tool install -g roslynator.dotnet.cli
     - name: roslynator test
       run: roslynator analyze
+    - name: Run Snyk to test for vulnerabilities
+      uses: snyk/actions/dotnet@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+#      with:
+#        args: --severity-threshold=high
     - name: Test Report
       uses: actions/upload-artifact@v4
       if: always()
