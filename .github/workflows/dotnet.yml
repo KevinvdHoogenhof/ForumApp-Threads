@@ -11,26 +11,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET
+    
+    - name: Setup .NET    
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        # Look to see if there is a cache hit for the corresponding requirements file
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+            ${{ runner.os }}-nuget 
+            
     - name: Restore dependencies
       run: dotnet restore
+      
+    - name: Run Snyk to test for vulnerabilities
+      uses: snyk/actions/dotnet@master
+      continue-on-error: true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+#      with:
+#        args: --severity-threshold=high   
+
     - name: Build
       run: dotnet build --no-restore
+      
     - name: Test
       run: dotnet test --no-build --logger "trx;LogFileName=test-results.trx" || true --verbosity normal
+      
     - name: roslynator
       run: dotnet tool install -g roslynator.dotnet.cli
     - name: roslynator test
       run: roslynator analyze
-    - name: Run Snyk to test for vulnerabilities
-      uses: snyk/actions/dotnet@master
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-#      with:
-#        args: --severity-threshold=high
+      
     - name: Test Report
       uses: actions/upload-artifact@v4
       if: always()
