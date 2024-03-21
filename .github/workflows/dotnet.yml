@@ -34,28 +34,9 @@ jobs:
       uses: snyk/actions/dotnet@master
       continue-on-error: true
       env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      with:
-        command: test --sarif
-        args: --sarif-file-output=snyk_test.sarif        
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
 #      with:
-#        args: --severity-threshold=high   
-
-    - name: Run Snyk code test
-      uses: snyk/actions/dotnet@master
-      continue-on-error: true
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      with:
-        command: code test --sarif
-        args: --sarif-file-output=snyk_code_test.sarif
-
-    - name: Run Snyk monitor
-      uses: snyk/actions/dotnet@master
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      with:
-        command: monitor        
+#        args: --severity-threshold=high        
       
     - name: Dotnet test
       run: dotnet test --no-build --logger "trx;LogFileName=test-results.trx" || true --verbosity normal
@@ -65,16 +46,6 @@ jobs:
       
     - name: roslynator test
       run: roslynator analyze
-
-#    - name: Create SARIF directory and move SARIF files
-#      run: |
-#        mkdir sarif_files &&
-#        mv snyk_test.sarif snyk_code_test.sarif sarif_files/
-        
-#    - name: Upload result to GitHub Code Scanning
-#      uses: github/codeql-action/upload-sarif@v2
-#      with:
-#        sarif_file: sarif_files
       
     - name: Test Report
       uses: actions/upload-artifact@v4
