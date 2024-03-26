@@ -1,8 +1,20 @@
+using MongoDB.Driver;
+using Microsoft.Extensions.Configuration;
+using ThreadService.API.Models;
+using ThreadService.API.Services;
 
 namespace ThreadService.API
 {
     public class Program
     {
+        /*public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());*/
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +26,16 @@ namespace ThreadService.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Database
+            builder.Services.Configure<ThreadDBSettings>(
+            builder.Configuration.GetSection("ThreadDB"));
+
+            builder.Services.AddSingleton<Services.ThreadService>();
+
+            //var mongoClient = new MongoClient(builder.Configuration.GetConnectionString("ThreadDB"));
+            //var database = mongoClient.GetDatabase("ThreadDB");
+            //builder.Services.AddSingleton<IMongoDatabase>(database);
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -23,7 +45,7 @@ namespace ThreadService.API
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
