@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThreadService.API", "ThreadService.API\ThreadService.API.csproj", "{356E2272-F5EC-4F2C-A8C3-1FF7544523BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadService.Tests", "ThreadService.Tests\ThreadService.Tests.csproj", "{AF3BC64A-268A-476F-9C11-A8561DF5D0FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThreadService.Tests", "ThreadService.Tests\ThreadService.Tests.csproj", "{AF3BC64A-268A-476F-9C11-A8561DF5D0FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

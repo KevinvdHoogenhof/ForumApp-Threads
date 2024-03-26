@@ -2,11 +2,17 @@
 
 Threadservice of the forum application
 
+## Testing this application
+
+Local development: Use the locahost connectionstring
+
+Docker compose: Use the threaddb connectionstring
+
 ## Database
 
-Get image:
+Get image: ```docker pull mongo```
 
-Docker run:
+Docker run: ```docker run -d -p 27017:27017 -v data:/data/db --name threaddb mongo```
 
 ## ThreadService
 
