@@ -57,7 +57,7 @@ namespace ThreadService.API.Controllers
                 return NotFound();
             }
 
-            await _service.UpdateThread(t);
+            await _service.UpdateThread(thread);
 
             return NoContent();
         }
