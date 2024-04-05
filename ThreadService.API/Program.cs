@@ -2,6 +2,7 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Configuration;
 using ThreadService.API.Models;
 using ThreadService.API.Services;
+using Confluent.Kafka;
 
 namespace ThreadService.API
 {
@@ -35,6 +36,11 @@ namespace ThreadService.API
             //var mongoClient = new MongoClient(builder.Configuration.GetConnectionString("ThreadDB"));
             //var database = mongoClient.GetDatabase("ThreadDB");
             //builder.Services.AddSingleton<IMongoDatabase>(database);
+
+            //Kafka producer
+            var producerConfig = builder.Configuration.GetSection("ProducerConfig").Get<ProducerConfig>();
+            var producer = new ProducerBuilder<string, int>(producerConfig).Build();
+            builder.Services.AddSingleton<IKafkaProducer>(_ => new KafkaProducer(producer, "test"));
 
             var app = builder.Build();
 

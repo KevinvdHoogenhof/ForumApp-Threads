@@ -12,8 +12,30 @@ namespace ThreadService.API.Controllers
     public class ThreadController : ControllerBase
     {
         private readonly Services.ThreadService _service;
-        public ThreadController(Services.ThreadService service) =>
+        private readonly IKafkaProducer _producer;
+        public ThreadController(Services.ThreadService service, IKafkaProducer producer)
+        {
             _service = service;
+            _producer = producer;
+        }
+
+        [HttpGet("KafkaTest")]
+        public async Task<ActionResult<string>> KafkaTest(CancellationToken stoppingToken)
+        {
+            List<string> strings = ["NEWMESSAGES", "NEWMESSAGES222222222222222"];
+
+            // Needs to be only done once?
+            await _producer.Produce(strings, stoppingToken);
+            /*
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                //var weather = await _provider.GetCurrent(stoppingToken);
+                await _producer.Produce(strings, stoppingToken);
+                //_log.LogInformation("Published {weatherCount} weather items", weather.Count);
+            }*/
+
+            return "Produced??";
+        }
 
         //public ThreadController(IOptions<ThreadDBSettings> settings)
         //{
