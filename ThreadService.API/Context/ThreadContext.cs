@@ -31,14 +31,17 @@ namespace ThreadService.API.Context
             return await (await _threads.FindAsync(filter)).ToListAsync();
         }
 
-        public async Task CreateAsync(Models.Thread thread)
+        public async Task<Models.Thread?> CreateAsync(Models.Thread thread)
         {
             await _threads.InsertOneAsync(thread);
+            return thread;
         }
 
-        public async Task UpdateAsync(Models.Thread thread)
+        public async Task<Models.Thread?> UpdateAsync(Models.Thread thread)
         {
-            await _threads.ReplaceOneAsync(x => x.Id == thread.Id, thread);
+            return (await _threads.ReplaceOneAsync(x => x.Id == thread.Id, thread)).IsAcknowledged
+                ? await _threads.Find(x => x.Id == thread.Id).FirstOrDefaultAsync()
+                : null;
         }
 
         public async Task RemoveAsync(string id)

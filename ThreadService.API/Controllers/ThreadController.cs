@@ -36,9 +36,6 @@ namespace ThreadService.API.Controllers
         [HttpGet]
         public async Task<List<Models.Thread>> Get() => 
             await _service.GetThreads();
-        //{
-        //return Ok(await _service.GetThreads());
-        //}
 
         [HttpGet("GetThreadByName")]
         public async Task<List<Models.Thread>> GetThreadByName(string name) =>
@@ -58,14 +55,12 @@ namespace ThreadService.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Models.Thread thread)
-        {
-            await _service.InsertThread(thread);
-            return CreatedAtAction(nameof(Get), new { id = thread.Id },thread);
-        }
+        public async Task<ActionResult<Models.Thread>> Post(ThreadDTO thread) =>
+            CreatedAtAction(nameof(Get), new { id = ((await _service.InsertThread(new Models.Thread { Description = thread.Description, Name = thread.Name, Posts = 0 }))?.Id) 
+                ?? throw new InvalidOperationException("Failed to insert the thread.") }, thread);
 
         [HttpPut("{id:length(24)}")]
-        public async Task<IActionResult> Update(string id, Models.Thread thread)
+        public async Task<ActionResult<Models.Thread>> Update(string id, ThreadDTO thread)
         {
             var t = await _service.GetThread(id);
 
@@ -74,9 +69,14 @@ namespace ThreadService.API.Controllers
                 return NotFound();
             }
 
-            await _service.UpdateThread(thread);
+            var th = await _service.UpdateThread(new Models.Thread { Id = t.Id, Description = thread.Description, Name = thread.Name, Posts = t.Posts });
+            
+            if (th is null)
+            {
+                return NotFound();
+            }
 
-            return NoContent();
+            return th;
         }
 
         [HttpDelete("{id:length(24)}")]

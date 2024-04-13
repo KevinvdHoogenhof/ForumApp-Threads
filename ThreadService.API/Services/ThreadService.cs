@@ -27,14 +27,14 @@ namespace ThreadService.API.Services
             return await _context.GetAsync();
         }
 
-        public async Task InsertThread(Models.Thread thread)
+        public async Task<Models.Thread?> InsertThread(Models.Thread thread)
         {
-            await _context.CreateAsync(thread);
+            return await _context.CreateAsync(thread);
         }
 
-        public async Task UpdateThread(Models.Thread thread)
+        public async Task<Models.Thread?> UpdateThread(Models.Thread thread)
         {
-            await _context.UpdateAsync(thread);
+            return await _context.UpdateAsync(thread);
         }
 
         public async Task DeleteThread(string id)

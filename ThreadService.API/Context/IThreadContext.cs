@@ -8,8 +8,8 @@ namespace ThreadService.API.Context
         public Task<Models.Thread?> GetAsync(string id);
         public Task<List<Models.Thread>> GetAsync();
         public Task<List<Models.Thread>> GetAsyncNameSearch(string name);
-        public Task CreateAsync(Models.Thread thread);
-        public Task UpdateAsync(Models.Thread thread);
+        public Task<Models.Thread?> CreateAsync(Models.Thread thread);
+        public Task<Models.Thread?> UpdateAsync(Models.Thread thread);
         public Task RemoveAsync(string id);
     }
 }
