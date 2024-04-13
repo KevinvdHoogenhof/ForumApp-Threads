@@ -23,24 +23,15 @@ namespace ThreadService.API.Controllers
         public async Task<ActionResult<string>> KafkaTest(CancellationToken stoppingToken)
         {
             List<string> strings = ["NEWMESSAGES", "NEWMESSAGES222222222222222"];
-
-            // Needs to be only done once?
-            await _producer.Produce(strings, stoppingToken);
-            /*
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                //var weather = await _provider.GetCurrent(stoppingToken);
-                await _producer.Produce(strings, stoppingToken);
-                //_log.LogInformation("Published {weatherCount} weather items", weather.Count);
-            }*/
-
+            await _producer.ProduceMultiple(strings, stoppingToken);
             return "Produced??";
         }
-
-        //public ThreadController(IOptions<ThreadDBSettings> settings)
-        //{
-        //    _service = new Services.ThreadService(settings);
-        //}
+        [HttpGet("KafkaTest2")]
+        public async Task<ActionResult<string>> KafkaTest2(string message, CancellationToken stoppingToken)
+        {
+            await _producer.Produce(message, stoppingToken);
+            return "Produced??";
+        }
 
         [HttpGet]
         public async Task<List<Models.Thread>> Get() => 

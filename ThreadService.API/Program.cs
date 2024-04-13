@@ -42,7 +42,7 @@ namespace ThreadService.API
 
             //Kafka producer
             var producerConfig = builder.Configuration.GetSection("ProducerConfig").Get<ProducerConfig>();
-            var producer = new ProducerBuilder<string, int>(producerConfig).Build();
+            var producer = new ProducerBuilder<Null, string>(producerConfig).Build();
             builder.Services.AddSingleton<IKafkaProducer>(_ => new KafkaProducer(producer, "test"));
 
             var app = builder.Build();

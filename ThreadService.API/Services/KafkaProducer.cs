@@ -4,31 +4,23 @@ namespace ThreadService.API.Services
 {
     public class KafkaProducer : IKafkaProducer, IDisposable
     {
-        private readonly IProducer<string, int> _producer;
+        private readonly IProducer<Null, string> _producer;
         private readonly string _topic;
 
-        public KafkaProducer(IProducer<string, int> producer, string topic)
+        public KafkaProducer(IProducer<Null, string> producer, string topic)
         {
             _producer = producer;
             _topic = topic;
         }
 
-        public async Task Produce(IReadOnlyCollection<string> test, CancellationToken cancellationToken)
+        public async Task Produce(string m, CancellationToken cancellationToken)
         {
-            var tasks = test
-                .Select(t =>
-                {
-                    var message = new Message<string, int>()
-                    {
-                        Key = t,
-                        Value = 10,
-                    };
+            await _producer.ProduceAsync(_topic, new Message<Null, string> { Value = m }, cancellationToken);
+        }
 
-                    return _producer.ProduceAsync(_topic, message, cancellationToken);
-                })
-                .ToArray();
-
-            await Task.WhenAll(tasks);
+        public async Task ProduceMultiple(IReadOnlyCollection<string> messages, CancellationToken cancellationToken)
+        {
+            await Task.WhenAll(messages.Select(t => _producer.ProduceAsync(_topic, new Message<Null, string> { Value = t }, cancellationToken)));
         }
 
         public void Dispose()

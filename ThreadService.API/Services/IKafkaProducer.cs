@@ -2,6 +2,7 @@
 {
     public interface IKafkaProducer
     {
-        Task Produce(IReadOnlyCollection<string> test, CancellationToken cancellationToken);
+        Task Produce(string message, CancellationToken cancellationToken);
+        Task ProduceMultiple(IReadOnlyCollection<string> messages, CancellationToken cancellationToken);
     }
 }

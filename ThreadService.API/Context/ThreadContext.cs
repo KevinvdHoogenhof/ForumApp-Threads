@@ -13,6 +13,7 @@ namespace ThreadService.API.Context
             var mongoDatabase = mongoClient.GetDatabase(threaddbsettings.Value.DatabaseName);
             _threads = mongoDatabase.GetCollection<Models.Thread>(threaddbsettings.Value.CollectionName);
         }
+
         public async Task<Models.Thread?> GetAsync(string id)
         {
             return await _threads.Find(x => x.Id == id).FirstOrDefaultAsync();
@@ -22,6 +23,7 @@ namespace ThreadService.API.Context
         {
             return await _threads.Find(_ => true).ToListAsync();
         }
+
         public async Task<List<Models.Thread>> GetAsyncNameSearch(string name)
         {
             var filter = Builders<Models.Thread>.Filter.Where(t => t.Name.Contains(name));
