@@ -11,9 +11,9 @@ namespace ThreadService.API.Controllers
     [Route("[controller]")]
     public class ThreadController : ControllerBase
     {
-        private readonly Services.ThreadService _service;
+        private readonly IThreadService _service;
         private readonly IKafkaProducer _producer;
-        public ThreadController(Services.ThreadService service, IKafkaProducer producer)
+        public ThreadController(IThreadService service, IKafkaProducer producer)
         {
             _service = service;
             _producer = producer;

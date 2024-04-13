@@ -6,44 +6,12 @@ using MongoDB.Driver;
 
 namespace ThreadService.API.Services
 {
-    public class ThreadService //: IThreadService
+    public class ThreadService : IThreadService
     {
-        private readonly IMongoCollection<Models.Thread> _threads;
-        public ThreadService(IOptions<ThreadDBSettings> settings)
-        {
-            var mongoClient = new MongoClient(settings.Value.ConnectionString);
-            var mongoDatabase = mongoClient.GetDatabase(settings.Value.DatabaseName);
-            _threads = mongoDatabase.GetCollection<Models.Thread>(settings.Value.CollectionName);
-        }
-        public async Task<Models.Thread?> GetThread(string id)
-        {
-            return await _threads.Find(x => x.Id == id).FirstOrDefaultAsync();
-        }
-
-        public async Task<List<Models.Thread>> GetThreads()
-        {
-            return await _threads.Find(_ => true).ToListAsync();
-        }
-
-        public async Task InsertThread(Models.Thread thread)
-        {
-            await _threads.InsertOneAsync(thread);
-        }
-
-        public async Task UpdateThread(Models.Thread thread)
-        {
-            await _threads.ReplaceOneAsync(x => x.Id == thread.Id, thread);
-        }
-
-        public async Task DeleteThread(string id)
-        {
-            await _threads.DeleteOneAsync(x => x.Id == id);
-        }
-        /*
         private readonly IThreadContext _context;
-        public ThreadService(IOptions<ThreadDBSettings> settings)
+        public ThreadService(IThreadContext context)
         {
-            _context = new ThreadContext(settings);
+            _context = context;
         }
         public async Task<Models.Thread?> GetThread(string id)
         {
@@ -68,6 +36,6 @@ namespace ThreadService.API.Services
         public async Task DeleteThread(string id)
         {
             await _context.RemoveAsync(id);
-        }*/
+        }
     }
 }

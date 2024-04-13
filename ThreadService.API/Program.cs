@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using ThreadService.API.Models;
 using ThreadService.API.Services;
 using Confluent.Kafka;
+using ThreadService.API.Context;
 
 namespace ThreadService.API
 {
@@ -31,7 +32,9 @@ namespace ThreadService.API
             builder.Services.Configure<ThreadDBSettings>(
             builder.Configuration.GetSection("ThreadDB"));
 
-            builder.Services.AddSingleton<Services.ThreadService>();
+            builder.Services.AddSingleton<IThreadContext, ThreadContext>();
+
+            builder.Services.AddSingleton<IThreadService, Services.ThreadService>();
 
             //var mongoClient = new MongoClient(builder.Configuration.GetConnectionString("ThreadDB"));
             //var database = mongoClient.GetDatabase("ThreadDB");
