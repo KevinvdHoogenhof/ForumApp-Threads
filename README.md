@@ -4,9 +4,29 @@ Threadservice of the forum application
 
 ## Testing this application
 
-Local development: Use the locahost connectionstring
+Local development: Use the localhost connectionstring
 
 Docker compose: Use the threaddb connectionstring
+
+# Kubernetes
+
+### Run
+
+In k8s folder:
+
+```kubectl apply -f deployment.yaml``` 
+
+```kubectl apply -f service.yaml```
+
+### Status
+
+```kubectl get deployments```
+
+```kubectl get pods```
+
+```kubectl get services```
+
+# Docker
 
 ## Database
 
@@ -14,7 +34,7 @@ Get image: ```docker pull mongo```
 
 Docker run: ```docker run -d -p 27017:27017 -v data:/data/db --name threaddb mongo```
 
-## ThreadService
+## ThreadService 
 
 ### Build docker image
 
