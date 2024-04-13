@@ -22,6 +22,12 @@ namespace ThreadService.API.Context
         {
             return await _threads.Find(_ => true).ToListAsync();
         }
+        public async Task<List<Models.Thread>> GetAsyncNameSearch(string name)
+        {
+            var filter = Builders<Models.Thread>.Filter.Where(t => t.Name.Contains(name));
+            //return await _threads.Find(filter).ToListAsync();
+            return await (await _threads.FindAsync(filter)).ToListAsync();
+        }
 
         public async Task CreateAsync(Models.Thread thread)
         {
