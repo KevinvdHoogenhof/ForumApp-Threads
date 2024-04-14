@@ -13,10 +13,12 @@ namespace ThreadService.API.Services
         {
             _context = context;
         }
+
         public async Task<Models.Thread?> GetThread(string id)
         {
             return await _context.GetAsync(id);
         }
+
         public async Task<List<Models.Thread>> GetThreadsByName(string name)
         {
             return await _context.GetAsyncNameSearch(name);
