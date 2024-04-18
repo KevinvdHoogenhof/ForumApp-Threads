@@ -29,8 +29,11 @@ namespace ThreadService.API
             builder.Services.AddSwaggerGen();
 
             // Database
-            builder.Services.Configure<ThreadDBSettings>(
-            builder.Configuration.GetSection("ThreadDB"));
+            //builder.Services.Configure<ThreadDBSettings>(
+            //    builder.Configuration.GetSection("ThreadDB"));
+
+            var connString = builder.Configuration.GetConnectionString("MongoDB");
+            builder.Services.AddSingleton<IMongoClient, MongoClient>(_ => new MongoClient(connString));
 
             builder.Services.AddSingleton<IThreadContext, ThreadContext>();
 

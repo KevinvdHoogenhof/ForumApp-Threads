@@ -7,12 +7,17 @@ namespace ThreadService.API.Context
     public class ThreadContext : IThreadContext
     {
         private readonly IMongoCollection<Models.Thread> _threads;
-        public ThreadContext(IOptions<ThreadDBSettings> threaddbsettings)
+        public ThreadContext(IMongoClient mongoClient)
+        {
+            var mongoDatabase = mongoClient.GetDatabase("ThreadDB");
+            _threads = mongoDatabase.GetCollection<Models.Thread>("Threads");
+        }
+        /*public ThreadContext(IOptions<ThreadDBSettings> threaddbsettings)
         {
             var mongoClient = new MongoClient(threaddbsettings.Value.ConnectionString);
             var mongoDatabase = mongoClient.GetDatabase(threaddbsettings.Value.DatabaseName);
             _threads = mongoDatabase.GetCollection<Models.Thread>(threaddbsettings.Value.CollectionName);
-        }
+        }*/
 
         public async Task<Models.Thread?> GetAsync(string id)
         {
