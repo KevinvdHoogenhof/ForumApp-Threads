@@ -15,12 +15,12 @@ using ThreadService.API.Context;
 
 namespace ThreadService.Tests
 {
-    public class ThreadTests : IClassFixture<MongoDbFixture>, IDisposable
+    public class APITests : IClassFixture<MongoDbFixture>, IDisposable
     {
         private readonly MongoDbFixture _fixture;
         private readonly HttpClient _client;
 
-        public ThreadTests(MongoDbFixture fixture)
+        public APITests(MongoDbFixture fixture)
         {
             _fixture = fixture;
             var appFactory = new WebApplicationFactory<Program>()
