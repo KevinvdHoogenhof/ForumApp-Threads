@@ -5,6 +5,7 @@ using ThreadService.API.Services;
 using Confluent.Kafka;
 using ThreadService.API.Context;
 using ThreadService.API.SeedData;
+using ThreadService.API.Kafka;
 
 namespace ThreadService.API
 {
@@ -50,6 +51,14 @@ namespace ThreadService.API
             var producerConfig = builder.Configuration.GetSection("ProducerConfig").Get<ProducerConfig>();
             var producer = new ProducerBuilder<Null, string>(producerConfig).Build();
             builder.Services.AddSingleton<IKafkaProducer>(_ => new KafkaProducer(producer, "updatethreadname"));
+
+            //Kafka consumer
+            var consumerConfig = builder.Configuration.GetSection("ConsumerConfig").Get<ConsumerConfig>();
+            var consumer = new ConsumerBuilder<Null, string>(consumerConfig).Build();
+            consumer.Subscribe("newpost");
+
+            builder.Services.AddHostedService(sp =>
+                new KafkaConsumer(sp.GetRequiredService<ILogger<KafkaConsumer>>(), consumer, sp.GetRequiredService<IThreadService>()));
 
             var app = builder.Build();
 

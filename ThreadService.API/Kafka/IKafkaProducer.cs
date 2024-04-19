@@ -1,4 +1,4 @@
-﻿namespace ThreadService.API.Services
+﻿namespace ThreadService.API.Kafka
 {
     public interface IKafkaProducer
     {

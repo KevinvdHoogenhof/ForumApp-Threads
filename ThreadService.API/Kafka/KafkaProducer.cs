@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 
-namespace ThreadService.API.Services
+namespace ThreadService.API.Kafka
 {
     public class KafkaProducer : IKafkaProducer, IDisposable
     {

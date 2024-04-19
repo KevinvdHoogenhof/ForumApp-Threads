@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using System.Text.Json;
 using Confluent.Kafka;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using ThreadService.API.Kafka;
 
 namespace ThreadService.API.Controllers
 {
@@ -66,17 +67,18 @@ namespace ThreadService.API.Controllers
         public async Task<ActionResult<Models.Thread>> Update(string id, ThreadDTO thread, CancellationToken stoppingToken)
         {
             var t = await _service.GetThread(id);
+            var oldname = t.Name;
 
             if (t is null)
             {
                 return NotFound();
             }
-
+            
             t.Name = thread.Name;
             t.Description = thread.Description;
             var th = await _service.UpdateThread(t);
             
-            if (t.Name != th?.Name)
+            if (oldname != th?.Name)
             {
                 await _producer.Produce(JsonSerializer.Serialize(new { t.Id, th?.Name }), stoppingToken);
             }
