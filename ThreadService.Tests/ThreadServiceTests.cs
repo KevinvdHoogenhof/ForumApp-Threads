@@ -12,6 +12,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using ThreadService.API;
 using ThreadService.API.Context;
+using ThreadService.API.SeedData;
 using ThreadService.API.Services;
 
 namespace ThreadService.Tests
@@ -25,6 +26,7 @@ namespace ThreadService.Tests
         public ThreadServiceTests(MongoDbFixture fixture)
         {
             _fixture = fixture;
+            var dataSeedingConfig = new DataSeedingConfiguration { SeedDataEnabled = false };
             var appFactory = new WebApplicationFactory<Program>()
                 .WithWebHostBuilder(builder =>
                 {
@@ -36,7 +38,7 @@ namespace ThreadService.Tests
                     });
                 });
             _client = appFactory.CreateClient();
-            _service = new API.Services.ThreadService(new ThreadContext(_fixture.Client));
+            _service = new API.Services.ThreadService(new ThreadContext(_fixture.Client, dataSeedingConfig));
         }
         [Fact]
         public async Task GetThreadById_ShouldReturnThreadWithCorrectId()
@@ -44,8 +46,8 @@ namespace ThreadService.Tests
             // Arrange
             var _db = _fixture.Client.GetDatabase("ThreadDB");
             var collection = _db.GetCollection<API.Models.Thread>("Threads");
-            API.Models.Thread thread1 = new API.Models.Thread { Name = "Test name", Description = "test description", Posts = 0 };
-            API.Models.Thread thread2 = new API.Models.Thread { Name = "Test name2", Description = "test description2", Posts = 0 };
+            API.Models.Thread thread1 = new() { Name = "Test name", Description = "test description", Posts = 0 };
+            API.Models.Thread thread2 = new() { Name = "Test name2", Description = "test description2", Posts = 0 };
             await collection.InsertOneAsync(thread1);
             await collection.InsertOneAsync(thread2);
 
@@ -72,9 +74,9 @@ namespace ThreadService.Tests
             // Arrange
             var _db = _fixture.Client.GetDatabase("ThreadDB");
             var collection = _db.GetCollection<API.Models.Thread>("Threads");
-            API.Models.Thread thread1 = new API.Models.Thread { Name = "Test name", Description = "test description", Posts = 0 };
-            API.Models.Thread thread2 = new API.Models.Thread { Name = "Test name2", Description = "test description2", Posts = 0 };
-            API.Models.Thread thread3 = new API.Models.Thread { Name = "Different Name", Description = "test description3", Posts = 0 };
+            API.Models.Thread thread1 = new() { Name = "Test name", Description = "test description", Posts = 0 };
+            API.Models.Thread thread2 = new() { Name = "Test name2", Description = "test description2", Posts = 0 };
+            API.Models.Thread thread3 = new() { Name = "Different Name", Description = "test description3", Posts = 0 };
             await collection.InsertOneAsync(thread1);
             await collection.InsertOneAsync(thread2);
             await collection.InsertOneAsync(thread3);
@@ -112,7 +114,7 @@ namespace ThreadService.Tests
         public async Task InsertOneThread_ShouldInsertThread()
         {
             // Arrange
-            API.Models.Thread thread = new API.Models.Thread { Name = "Test name", Description = "test description", Posts = 0 };
+            API.Models.Thread thread = new() { Name = "Test name", Description = "test description", Posts = 0 };
 
             // Act
             var t = await _service.InsertThread(thread);
@@ -137,7 +139,7 @@ namespace ThreadService.Tests
             // Arrange
             var _db = _fixture.Client.GetDatabase("ThreadDB");
             var collection = _db.GetCollection<API.Models.Thread>("Threads");
-            API.Models.Thread thread = new API.Models.Thread { Name = "Test name", Description = "test description", Posts = 0 };
+            API.Models.Thread thread = new() { Name = "Test name", Description = "test description", Posts = 0 };
             await collection.InsertOneAsync(thread);
 
             // Act
@@ -166,7 +168,7 @@ namespace ThreadService.Tests
             // Arrange
             var _db = _fixture.Client.GetDatabase("ThreadDB");
             var collection = _db.GetCollection<API.Models.Thread>("Threads");
-            API.Models.Thread thread = new API.Models.Thread { Name = "Test name", Description = "test description", Posts = 0 };
+            API.Models.Thread thread = new() { Name = "Test name", Description = "test description", Posts = 0 };
             await collection.InsertOneAsync(thread);
 
             // Act

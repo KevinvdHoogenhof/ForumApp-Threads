@@ -1,16 +1,21 @@
 ﻿using ThreadService.API.Models;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
+using ThreadService.API.SeedData;
 
 namespace ThreadService.API.Context
 {
     public class ThreadContext : IThreadContext
     {
         private readonly IMongoCollection<Models.Thread> _threads;
-        public ThreadContext(IMongoClient mongoClient)
+        public ThreadContext(IMongoClient mongoClient, IDataSeedingConfiguration dataSeedingConfig)
         {
             var mongoDatabase = mongoClient.GetDatabase("ThreadDB");
             _threads = mongoDatabase.GetCollection<Models.Thread>("Threads");
+            if (dataSeedingConfig.SeedDataEnabled && !_threads.AsQueryable().Any())
+            {
+                _threads.InsertManyAsync(SeedData.SeedData.GetThreads());
+            }
         }
         /*public ThreadContext(IOptions<ThreadDBSettings> threaddbsettings)
         {

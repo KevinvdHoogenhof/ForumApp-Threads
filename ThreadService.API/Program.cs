@@ -4,6 +4,7 @@ using ThreadService.API.Models;
 using ThreadService.API.Services;
 using Confluent.Kafka;
 using ThreadService.API.Context;
+using ThreadService.API.SeedData;
 
 namespace ThreadService.API
 {
@@ -34,6 +35,8 @@ namespace ThreadService.API
 
             var connString = builder.Configuration.GetConnectionString("MongoDB");
             builder.Services.AddSingleton<IMongoClient, MongoClient>(_ => new MongoClient(connString));
+
+            builder.Services.AddSingleton<IDataSeedingConfiguration, DataSeedingConfiguration>();
 
             builder.Services.AddSingleton<IThreadContext, ThreadContext>();
 
