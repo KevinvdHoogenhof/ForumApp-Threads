@@ -35,6 +35,8 @@ namespace ThreadService.Tests
                         services.RemoveAll<IMongoClient>();
                         services.AddSingleton<IMongoClient>(
                             (_) => _fixture.Client);
+                        services.RemoveAll<IDataSeedingConfiguration>();
+                        services.AddSingleton<IDataSeedingConfiguration>(dataSeedingConfig);
                     });
                 });
             _client = appFactory.CreateClient();
@@ -69,7 +71,25 @@ namespace ThreadService.Tests
             Assert.Equal(thread2.Posts, t2.Posts);
         }
         [Fact]
-        public async Task GetThreadByName_ShouldReturnThreadWithSameName()
+        public async Task GetAllThreads_ShouldReturnThreads()
+        {
+            // Arrange
+            var _db = _fixture.Client.GetDatabase("ThreadDB");
+            var collection = _db.GetCollection<API.Models.Thread>("Threads");
+            await collection.InsertOneAsync(new API.Models.Thread { Name = "Test name", Description = "test description", Posts = 0 });
+
+            // Act
+            var threads = await _service.GetThreads();
+
+            // Assert
+            Assert.NotNull(threads);
+            Assert.NotEmpty(threads);
+            Assert.Single(threads);
+            var resultItem = threads.FirstOrDefault();
+            Assert.NotNull(resultItem);
+        }
+        [Fact]
+        public async Task GetThreadByName_ShouldReturnThreadsThatContainName()
         {
             // Arrange
             var _db = _fixture.Client.GetDatabase("ThreadDB");
@@ -91,24 +111,6 @@ namespace ThreadService.Tests
             var resultItem = threads.FirstOrDefault();
             Assert.NotNull(resultItem);
             Assert.Contains("Test", resultItem.Name);
-        }
-        [Fact]
-        public async Task GetAllThreads_ShouldReturnThreads()
-        {
-            // Arrange
-            var _db = _fixture.Client.GetDatabase("ThreadDB");
-            var collection = _db.GetCollection<API.Models.Thread>("Threads");
-            await collection.InsertOneAsync(new API.Models.Thread { Name = "Test name", Description = "test description", Posts = 0 });
-
-            // Act
-            var threads = await _service.GetThreads();
-
-            // Assert
-            Assert.NotNull(threads);
-            Assert.NotEmpty(threads);
-            Assert.Single(threads);
-            var resultItem = threads.FirstOrDefault();
-            Assert.NotNull(resultItem);
         }
         [Fact]
         public async Task InsertOneThread_ShouldInsertThread()

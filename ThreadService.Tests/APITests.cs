@@ -80,7 +80,7 @@ namespace ThreadService.Tests
             Assert.Empty(threads);
         }
         [Fact]
-        public async Task GetThreadsByName_ShouldReturnThreadThatContainsName()
+        public async Task GetThreadsByName_ShouldReturnThreadsThatContainsName()
         {
             // Arrange
             var _db = _fixture.Client.GetDatabase("ThreadDB");
@@ -199,8 +199,8 @@ namespace ThreadService.Tests
 
             var res2 = await _client.GetAsync("/thread");
             res2.EnsureSuccessStatusCode();
-            var content2 = await res2.Content.ReadAsStringAsync();
-            var threads = JsonSerializer.Deserialize<ICollection<API.Models.Thread>>(content2, new JsonSerializerOptions
+            var content = await res2.Content.ReadAsStringAsync();
+            var threads = JsonSerializer.Deserialize<ICollection<API.Models.Thread>>(content, new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
