@@ -1,8 +1,4 @@
-﻿using ThreadService.API.Models;
-using ThreadService.API.Context;
-using System.Threading;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+﻿using ThreadService.API.Context;
 
 namespace ThreadService.API.Services
 {

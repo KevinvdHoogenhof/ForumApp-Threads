@@ -27,13 +27,13 @@ namespace ThreadService.API.Controllers
         public async Task<ActionResult<string>> KafkaTest(CancellationToken stoppingToken)
         {
             List<string> strings = ["NEWMESSAGES", "NEWMESSAGES222222222222222"];
-            await _producer.ProduceMultiple(strings, stoppingToken);
+            _ = _producer.ProduceMultiple(strings, stoppingToken);
             return "Produced??";
         }
         [HttpGet("KafkaTest2")]
         public async Task<ActionResult<string>> KafkaTest2(string message, CancellationToken stoppingToken)
         {
-            await _producer.Produce(message, stoppingToken);
+            _ = _producer.Produce(message, stoppingToken);
             return "Produced??";
         }
 
@@ -80,7 +80,7 @@ namespace ThreadService.API.Controllers
             
             if (oldname != th?.Name)
             {
-                await _producer.Produce(JsonSerializer.Serialize(new { t.Id, th?.Name }), stoppingToken);
+                _ = _producer.Produce(JsonSerializer.Serialize(new { t.Id, th?.Name }), stoppingToken);
             }
 
             if (th is null)

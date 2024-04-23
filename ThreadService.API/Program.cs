@@ -1,6 +1,4 @@
 using MongoDB.Driver;
-using Microsoft.Extensions.Configuration;
-using ThreadService.API.Models;
 using ThreadService.API.Services;
 using Confluent.Kafka;
 using ThreadService.API.Context;

@@ -1,5 +1,4 @@
-﻿using ThreadService.API.Models;
-namespace ThreadService.API.Services
+﻿namespace ThreadService.API.Services
 {
     public interface IThreadService
     {

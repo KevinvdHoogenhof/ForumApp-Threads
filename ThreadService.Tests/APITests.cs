@@ -3,15 +3,9 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using ThreadService.API;
-using ThreadService.API.Context;
 using ThreadService.API.SeedData;
 
 namespace ThreadService.Tests
