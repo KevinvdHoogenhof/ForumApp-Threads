@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using System.Text.Json;
 using ThreadService.API.Services;
+using static Confluent.Kafka.ConfigPropertyNames;
 
 namespace ThreadService.API.Kafka
 {
@@ -23,25 +24,44 @@ namespace ThreadService.API.Kafka
             var i = 0;
             while (!stoppingToken.IsCancellationRequested)
             {
-                var consumeResult = _consumer.Consume(stoppingToken);
-                var mv = consumeResult.Message.Value;
-                _log.LogInformation(mv);
-
                 try
                 {
-                    var t = JsonSerializer.Deserialize<ThreadIdPostId>(mv);
-                    var p = t != null ? await _service.GetThread(t.ThreadId) : null;
-                    p.Posts = t.Posts;
-                    await _service.UpdateThread(p);
-                }
-                catch (JsonException ex)
-                {
-                    Console.WriteLine($"JSON deserialization failed: {ex.Message}");
-                }
+                    _consumer.Subscribe("newpost");
 
-                if (i++ % 1000 == 0)
+                    var consumeResult = _consumer.Consume(stoppingToken);
+                    var mv = consumeResult.Message.Value;
+                    _log.LogInformation(mv);
+
+                    try
+                    {
+                        var t = JsonSerializer.Deserialize<ThreadIdPostId>(mv);
+                        var p = t != null ? await _service.GetThread(t.ThreadId) : null;
+                        p.Posts = t.Posts;
+                        await _service.UpdateThread(p);
+                    }
+                    catch (JsonException ex)
+                    {
+                        Console.WriteLine($"JSON deserialization failed: {ex.Message}");
+                    }
+
+                    if (i++ % 1000 == 0)
+                    {
+                        _consumer.Commit();
+                    }
+                }
+                catch (ConsumeException ex)
                 {
-                    _consumer.Commit();
+                    _log.LogInformation($"Error consuming message: {ex.Error.Reason}");
+                    
+                    await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError(ex, "An unexpected error occurred while consuming messages.");
                 }
             }
         }

@@ -41,7 +41,7 @@ namespace ThreadService.API.Controllers
         public async Task<List<Models.Thread>> Get() => 
             await _service.GetThreads();
 
-        [HttpGet("GetThreadsByName/{name:length(24)}")]
+        [HttpGet("GetThreadsByName/{name}")]
         public async Task<List<Models.Thread>> GetThreadsByName(string name) =>
             await _service.GetThreadsByName(name);
 

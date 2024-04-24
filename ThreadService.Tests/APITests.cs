@@ -87,7 +87,7 @@ namespace ThreadService.Tests
             await collection.InsertOneAsync(thread3);
 
             // Act
-            var res = await _client.GetAsync("/thread/getthreadsbyname?name=Test");
+            var res = await _client.GetAsync("/thread/getthreadsbyname/Test");
             res.EnsureSuccessStatusCode();
             var content = await res.Content.ReadAsStringAsync();
             var threads = JsonSerializer.Deserialize<ICollection<API.Models.Thread>>(content, new JsonSerializerOptions
