@@ -1,7 +1,9 @@
 using MongoDB.Driver;
-using Microsoft.Extensions.Configuration;
-using ThreadService.API.Models;
 using ThreadService.API.Services;
+using Confluent.Kafka;
+using ThreadService.API.Context;
+using ThreadService.API.SeedData;
+using ThreadService.API.Kafka;
 
 namespace ThreadService.API
 {
@@ -27,14 +29,34 @@ namespace ThreadService.API
             builder.Services.AddSwaggerGen();
 
             // Database
-            builder.Services.Configure<ThreadDBSettings>(
-            builder.Configuration.GetSection("ThreadDB"));
+            //builder.Services.Configure<ThreadDBSettings>(
+            //    builder.Configuration.GetSection("ThreadDB"));
 
-            builder.Services.AddSingleton<Services.ThreadService>();
+            var connString = builder.Configuration.GetConnectionString("MongoDB");
+            builder.Services.AddSingleton<IMongoClient, MongoClient>(_ => new MongoClient(connString));
+
+            builder.Services.AddSingleton<IDataSeedingConfiguration, DataSeedingConfiguration>();
+
+            builder.Services.AddSingleton<IThreadContext, ThreadContext>();
+
+            builder.Services.AddSingleton<IThreadService, Services.ThreadService>();
 
             //var mongoClient = new MongoClient(builder.Configuration.GetConnectionString("ThreadDB"));
             //var database = mongoClient.GetDatabase("ThreadDB");
             //builder.Services.AddSingleton<IMongoDatabase>(database);
+
+            //Kafka producer
+            var producerConfig = builder.Configuration.GetSection("ProducerConfig").Get<ProducerConfig>();
+            var producer = new ProducerBuilder<Null, string>(producerConfig).Build();
+            builder.Services.AddSingleton<IKafkaProducer>(_ => new KafkaProducer(producer, "updatethreadname"));
+
+            //Kafka consumer
+            var consumerConfig = builder.Configuration.GetSection("ConsumerConfig").Get<ConsumerConfig>();
+            var consumer = new ConsumerBuilder<Null, string>(consumerConfig).Build();
+            //consumer.Subscribe("newpost");
+
+            builder.Services.AddHostedService(sp =>
+                new KafkaConsumer(sp.GetRequiredService<ILogger<KafkaConsumer>>(), consumer, sp.GetRequiredService<IThreadService>()));
 
             var app = builder.Build();
 
