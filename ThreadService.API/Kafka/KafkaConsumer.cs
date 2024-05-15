@@ -34,7 +34,7 @@ namespace ThreadService.API.Kafka
 
                     try
                     {
-                        var t = JsonSerializer.Deserialize<ThreadIdPostId>(mv);
+                        var t = JsonSerializer.Deserialize<ThreadIdPosts>(mv);
                         var p = t != null ? await _service.GetThread(t.ThreadId) : null;
                         p.Posts = t.Posts;
                         await _service.UpdateThread(p);
@@ -71,7 +71,7 @@ namespace ThreadService.API.Kafka
             _consumer.Dispose();
             base.Dispose();
         }
-        private class ThreadIdPostId
+        private class ThreadIdPosts
         {
             public string ThreadId { get; set; } = null!;
             public int Posts { get; set; } = 0;
