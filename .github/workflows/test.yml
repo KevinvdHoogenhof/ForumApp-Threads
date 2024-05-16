@@ -36,7 +36,7 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
       with:
-        args: --all-projects #--severity-threshold=high        
+        command: code test        
       
     - name: Dotnet test
       run: dotnet test --no-build --logger "trx;LogFileName=test-results.trx" || true --verbosity normal
