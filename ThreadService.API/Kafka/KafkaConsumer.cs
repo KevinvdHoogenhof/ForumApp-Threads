@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using ThreadService.API.Services;
 using static Confluent.Kafka.ConfigPropertyNames;
 
@@ -35,6 +36,7 @@ namespace ThreadService.API.Kafka
                     try
                     {
                         var t = JsonSerializer.Deserialize<ThreadIdPosts>(mv);
+                        _log.LogInformation($"Deserialized ThreadId: {t.ThreadId}, Posts: {t.Posts}");
                         var p = t != null ? await _service.GetThread(t.ThreadId) : null;
                         p.Posts = t.Posts;
                         await _service.UpdateThread(p);
@@ -44,10 +46,10 @@ namespace ThreadService.API.Kafka
                         Console.WriteLine($"JSON deserialization failed: {ex.Message}");
                     }
 
-                    if (i++ % 1000 == 0)
-                    {
+                    //if (i++ % 1000 == 0)
+                    //{
                         _consumer.Commit();
-                    }
+                    //}
                 }
                 catch (ConsumeException ex)
                 {
@@ -73,7 +75,9 @@ namespace ThreadService.API.Kafka
         }
         private class ThreadIdPosts
         {
+            [JsonPropertyName("ThreadId")]
             public string ThreadId { get; set; } = null!;
+            [JsonPropertyName("posts")]
             public int Posts { get; set; } = 0;
         }
     }
