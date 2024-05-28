@@ -30,46 +30,20 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
 
-#    - name: Run Snyk test
-#      uses: snyk/actions/dotnet@master
-#      continue-on-error: true
-#      env:
-#        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
-#      with:
-#        command: code test   
-
-    - name: Run Trivy scanner
-      uses: aquasecurity/trivy-action@0.20.0
+    - name: Run Snyk test
+      uses: snyk/actions/dotnet@master
+      continue-on-error: true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
       with:
-        scan-type: 'fs'
-        ignore-unfixed: true
-        format: 'sarif'
-        output: 'trivy-results.sarif'
-        severity: 'LOW'
-    
-    - name: Publish Trivy Output to Summary
-      run: |
-        if [[ -s trivy-results.sarif ]]; then
-          {
-            echo "### Security Output"
-            echo "<details><summary>Click to expand</summary>"
-            echo ""
-            echo '```terraform'
-            cat trivy-results.sarif
-            echo '```'
-            echo "</details>"
-          } >> $GITHUB_STEP_SUMMARY
-        fi
+        command: code test   
       
-#    - name: Dotnet test
-#      run: dotnet test --no-build --logger "trx;LogFileName=test-results.trx" || true --verbosity normal
+    - name: roslynator
+      run: dotnet tool install -g roslynator.dotnet.cli
       
-#    - name: roslynator
-#      run: dotnet tool install -g roslynator.dotnet.cli
-      
-#    - name: roslynator test
-#      continue-on-error: true
-#      run: roslynator analyze
+    - name: roslynator test
+      continue-on-error: true
+      run: roslynator analyze
 
     - name: Test
       run: dotnet test --no-build --logger "trx;LogFileName=test-results.trx" --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
