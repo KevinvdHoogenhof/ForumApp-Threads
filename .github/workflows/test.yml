@@ -49,7 +49,7 @@ jobs:
     
     - name: Publish Trivy Output to Summary
       run: |
-        if [[ -s trivy.txt ]]; then
+        if [[ -s trivy-results.sarif ]]; then
           {
             echo "### Security Output"
             echo "<details><summary>Click to expand</summary>"
