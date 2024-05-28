@@ -8,11 +8,13 @@ using System.Text.Json;
 using Confluent.Kafka;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using ThreadService.API.Kafka;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ThreadService.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [ExcludeFromCodeCoverage]
     public class ThreadController : ControllerBase
     {
         private readonly IThreadService _service;

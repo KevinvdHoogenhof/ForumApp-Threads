@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ThreadService.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [ExcludeFromCodeCoverage]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

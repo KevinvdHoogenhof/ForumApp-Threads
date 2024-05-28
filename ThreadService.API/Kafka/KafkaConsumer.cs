@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ThreadService.API.Services;
@@ -6,6 +7,7 @@ using static Confluent.Kafka.ConfigPropertyNames;
 
 namespace ThreadService.API.Kafka
 {
+    [ExcludeFromCodeCoverage]
     public class KafkaConsumer : BackgroundService
     {
         private readonly ILogger<KafkaConsumer> _log;
