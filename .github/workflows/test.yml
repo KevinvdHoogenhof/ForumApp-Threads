@@ -36,7 +36,16 @@ jobs:
 #      env:
 #        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
 #      with:
-#        command: code test        
+#        command: code test   
+
+    - name: Run Trivy vulnerability scanner in repo mode
+      uses: aquasecurity/trivy-action@0.20.0
+      with:
+        scan-type: 'fs'
+        ignore-unfixed: true
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        severity: 'MEDIUM'
       
 #    - name: Dotnet test
 #      run: dotnet test --no-build --logger "trx;LogFileName=test-results.trx" || true --verbosity normal
