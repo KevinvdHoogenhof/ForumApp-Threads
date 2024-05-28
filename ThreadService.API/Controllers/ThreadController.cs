@@ -23,20 +23,6 @@ namespace ThreadService.API.Controllers
             _producer = producer;
         }
 
-        [HttpGet("KafkaTest")]
-        public async Task<ActionResult<string>> KafkaTest(CancellationToken stoppingToken)
-        {
-            List<string> strings = ["NEWMESSAGES", "NEWMESSAGES222222222222222"];
-            _ = _producer.ProduceMultiple(strings, stoppingToken);
-            return "Produced??";
-        }
-        [HttpGet("KafkaTest2")]
-        public async Task<ActionResult<string>> KafkaTest2(string message, CancellationToken stoppingToken)
-        {
-            _ = _producer.Produce(message, stoppingToken);
-            return "Produced??";
-        }
-
         [HttpGet]
         public async Task<List<Models.Thread>> Get() => 
             await _service.GetThreads();

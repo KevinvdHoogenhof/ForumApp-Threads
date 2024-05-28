@@ -36,7 +36,7 @@ namespace ThreadService.API.Kafka
                     try
                     {
                         var t = JsonSerializer.Deserialize<ThreadIdPosts>(mv);
-                        _log.LogInformation($"Deserialized ThreadId: {t.ThreadId}, Posts: {t.Posts}");
+                        //_log.LogInformation($"Deserialized ThreadId: {t.ThreadId}, Posts: {t.Posts}");
                         var p = t != null ? await _service.GetThread(t.ThreadId) : null;
                         p.Posts = t.Posts;
                         await _service.UpdateThread(p);
