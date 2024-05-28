@@ -14,9 +14,23 @@ Docker compose: Use the threaddb connectionstring
 
 In k8s folder:
 
-```kubectl apply -f deployment.yaml``` 
+```kubectl apply -f mongopvc.yaml``` 
 
-```kubectl apply -f service.yaml```
+```kubectl apply -f mongodb.yaml``` 
+
+```kubectl apply -f threadservice.yaml``` (Should be accessible at localhost:30007)
+
+```kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml```
+
+```kubectl apply -f ingress-nginx-controller.yaml```
+
+```kubectl apply --kustomize github.com/kubernetes/ingress-nginx/deploy/prometheus/```
+
+```kubectl apply --kustomize github.com/kubernetes/ingress-nginx/deploy/grafana/```
+
+```kubectl apply -f ingress.yaml```
+
+```kubectl apply -f configmap.yaml```
 
 ### Status
 
@@ -25,6 +39,12 @@ In k8s folder:
 ```kubectl get pods```
 
 ```kubectl get services```
+
+### Delete resources
+
+```kubectl delete deployment --all --namespace=default```
+
+```kubectl delete svc <YourServiceName>```
 
 # Docker
 
