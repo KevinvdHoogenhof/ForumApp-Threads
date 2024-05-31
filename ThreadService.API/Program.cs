@@ -35,7 +35,12 @@ namespace ThreadService.API
             //    builder.Configuration.GetSection("ThreadDB"));
 
             var connString = builder.Configuration.GetConnectionString("MongoDB");
-            builder.Services.AddSingleton<IMongoClient, MongoClient>(_ => new MongoClient(connString));
+            MongoClientSettings settings = MongoClientSettings.FromUrl(
+                new MongoUrl(connString)    
+            );
+            settings.SslSettings = new SslSettings() { EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12 };
+
+            builder.Services.AddSingleton<IMongoClient, MongoClient>(_ => new MongoClient(settings));
 
             builder.Services.AddSingleton<IDataSeedingConfiguration, DataSeedingConfiguration>();
 
