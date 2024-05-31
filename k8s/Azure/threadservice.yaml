@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: threadservice
+  labels:
+    app: threadservice
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: threadservice
+  template:
+    metadata: 
+      labels:
+        app: threadservice
+    spec:
+      containers:
+        - name: threadservice
+          image: s7acr.azurecr.io/threadservice:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ConnectionStrings__MongoDB
+              valueFrom:
+                secretKeyRef:
+                  name: cosmosmongodb-secret
+                  key: cosmosmongodburl
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-threads
+spec:
+  selector:
+    app: threadservice
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: LoadBalancer
