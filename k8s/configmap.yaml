@@ -44,17 +44,57 @@ data:
           - source_labels: [__meta_kubernetes_service_name]
             regex: prometheus-server
             action: drop
+      - job_name: 'metrics-server'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - kube-system
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: "true"
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
+            action: replace
+            target_label: __scheme__
+            regex: (https?)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            target_label: __address__
+            regex: ([^:]+)(?::\d+)?;(\\d+)
+            replacement: $1:$2
+          - source_labels: [__meta_kubernetes_service_name]
+            regex: metrics-server
+            action: keep
+          - source_labels: [__meta_kubernetes_service_namespace]
+            regex: kube-system
+            action: keep
       - job_name: 'threadservice'
         kubernetes_sd_configs:
-          - role: service
+          - role: pod
             namespaces:
               names:
                 - default
         relabel_configs:
-          - source_labels: [__meta_kubernetes_service_label_component]
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
             action: keep
-            regex: cthread
-        metrics_path: /metrics
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            target_label: __address__
+            regex: (.+):(\d+)
+            replacement: ${1}:${2}
+#      - job_name: 'threadservice'
+#        kubernetes_sd_configs:
+#          - role: service
+#            namespaces:
+#              names:
+#                - default
+#        relabel_configs:
+#          - source_labels: [__meta_kubernetes_service_label_component]
+#            action: keep
+#            regex: cthread
+#        metrics_path: /metrics
 #  prometheus.yaml: "global:\r\n  scrape_interval: 10s\r\nscrape_configs:\r\n- job_name:
 #    'ingress-nginx-endpoints'\r\n  kubernetes_sd_configs:\r\n  - role: pod\r\n    namespaces:\r\n
 #    \     names:\r\n      - ingress-nginx\r\n  relabel_configs:\r\n  - source_labels:
