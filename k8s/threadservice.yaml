@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: threadservice
+  labels:
+    app: threadservice
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      component: cthread
+  template:
+    metadata: 
+      labels:
+        component: cthread
+      annotations: 
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+        - name: cthreadservice
+          image: threadservice
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ConnectionStrings__MongoDB
+              value: "mongodb://threaddb:27017"
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "200m"    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-threads
+spec:
+  type: NodePort
+  selector:
+    component: cthread
+  ports:
+    - port: 9999
+      targetPort: 8080
+      nodePort: 30007

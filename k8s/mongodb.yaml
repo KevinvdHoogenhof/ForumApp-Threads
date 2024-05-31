@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: threaddb
+  labels:
+    app: threaddb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: threaddb
+  template:
+    metadata:
+      labels:
+        app: threaddb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongo-storage
+          mountPath: /data/db
+      volumes:
+      - name: mongo-storage
+        persistentVolumeClaim:
+          claimName: mongopvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: threaddb
+#  labels:
+#    app: mongodb
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    app: threaddb
+  type: ClusterIP

@@ -1,0 +1,110 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+#  annotations:
+#    kubectl.kubernetes.io/last-applied-configuration: |
+#      {"apiVersion":"v1","data":{"prometheus.yaml":"global:\r\n  scrape_interval: 10s\r\nscrape_configs:\r\n- job_name: 'ingress-nginx-endpoints'\r\n  kubernetes_sd_configs:\r\n  - role: pod\r\n    namespaces:\r\n      names:\r\n      - ingress-nginx\r\n  relabel_configs:\r\n  - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]\r\n    action: keep\r\n    regex: true\r\n  - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]\r\n    action: replace\r\n    target_label: __scheme__\r\n    regex: (https?)\r\n  - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]\r\n    action: replace\r\n    target_label: __metrics_path__\r\n    regex: (.+)\r\n  - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]\r\n    action: replace\r\n    target_label: __address__\r\n    regex: ([^:]+)(?::\\d+)?;(\\d+)\r\n    replacement: $1:$2\r\n  - source_labels: [__meta_kubernetes_service_name]\r\n    regex: prometheus-server\r\n    action: drop\r\n"},"kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"prometheus","app.kubernetes.io/part-of":"ingress-nginx"},"name":"prometheus-configuration-9hghh7d6bd","namespace":"ingress-nginx"}}
+#  creationTimestamp: "2024-05-28T12:52:07Z"
+#  labels:
+#    app.kubernetes.io/name: prometheus
+#    app.kubernetes.io/part-of: ingress-nginx
+  name: prometheus-configuration-9hghh7d6bd
+  namespace: ingress-nginx
+#  resourceVersion: "181486"
+#  uid: f8a2e430-e51e-42e4-af38-e594034112fb
+data:
+  prometheus.yaml: |
+    global:
+      scrape_interval: 10s
+
+    scrape_configs:
+      - job_name: 'ingress-nginx-endpoints'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - ingress-nginx
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
+            action: replace
+            target_label: __scheme__
+            regex: (https?)
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            target_label: __address__
+            regex: ([^:]+)(?::\d+)?;(\\d+)
+            replacement: $1:$2
+          - source_labels: [__meta_kubernetes_service_name]
+            regex: prometheus-server
+            action: drop
+      - job_name: 'metrics-server'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - kube-system
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: "true"
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
+            action: replace
+            target_label: __scheme__
+            regex: (https?)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            target_label: __address__
+            regex: ([^:]+)(?::\d+)?;(\\d+)
+            replacement: $1:$2
+          - source_labels: [__meta_kubernetes_service_name]
+            regex: metrics-server
+            action: keep
+          - source_labels: [__meta_kubernetes_service_namespace]
+            regex: kube-system
+            action: keep
+      - job_name: 'threadservice'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - default
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            target_label: __address__
+            regex: (.+):(\d+)
+            replacement: ${1}:${2}
+#      - job_name: 'threadservice'
+#        kubernetes_sd_configs:
+#          - role: service
+#            namespaces:
+#              names:
+#                - default
+#        relabel_configs:
+#          - source_labels: [__meta_kubernetes_service_label_component]
+#            action: keep
+#            regex: cthread
+#        metrics_path: /metrics
+#  prometheus.yaml: "global:\r\n  scrape_interval: 10s\r\nscrape_configs:\r\n- job_name:
+#    'ingress-nginx-endpoints'\r\n  kubernetes_sd_configs:\r\n  - role: pod\r\n    namespaces:\r\n
+#    \     names:\r\n      - ingress-nginx\r\n  relabel_configs:\r\n  - source_labels:
+#    [__meta_kubernetes_pod_annotation_prometheus_io_scrape]\r\n    action: keep\r\n
+#    \   regex: true\r\n  - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]\r\n
+#    \   action: replace\r\n    target_label: __scheme__\r\n    regex: (https?)\r\n
+#    \ - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]\r\n    action:
+#    replace\r\n    target_label: __metrics_path__\r\n    regex: (.+)\r\n  - source_labels:
+#    [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]\r\n    action:
+#    replace\r\n    target_label: __address__\r\n    regex: ([^:]+)(?::\\d+)?;(\\d+)\r\n
+#    \   replacement: $1:$2\r\n  - source_labels: [__meta_kubernetes_service_name]\r\n
+#    \   regex: prometheus-server\r\n    action: drop\r\n"
+

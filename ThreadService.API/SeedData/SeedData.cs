@@ -1,7 +1,9 @@
-﻿using ThreadService.API.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using ThreadService.API.Models;
 
 namespace ThreadService.API.SeedData
 {
+    [ExcludeFromCodeCoverage]
     public class SeedData
     {
         public static IEnumerable<Models.Thread> GetThreads()

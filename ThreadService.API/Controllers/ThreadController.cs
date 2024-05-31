@@ -8,11 +8,13 @@ using System.Text.Json;
 using Confluent.Kafka;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using ThreadService.API.Kafka;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ThreadService.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [ExcludeFromCodeCoverage]
     public class ThreadController : ControllerBase
     {
         private readonly IThreadService _service;
@@ -21,20 +23,6 @@ namespace ThreadService.API.Controllers
         {
             _service = service;
             _producer = producer;
-        }
-
-        [HttpGet("KafkaTest")]
-        public async Task<ActionResult<string>> KafkaTest(CancellationToken stoppingToken)
-        {
-            List<string> strings = ["NEWMESSAGES", "NEWMESSAGES222222222222222"];
-            _ = _producer.ProduceMultiple(strings, stoppingToken);
-            return "Produced??";
-        }
-        [HttpGet("KafkaTest2")]
-        public async Task<ActionResult<string>> KafkaTest2(string message, CancellationToken stoppingToken)
-        {
-            _ = _producer.Produce(message, stoppingToken);
-            return "Produced??";
         }
 
         [HttpGet]

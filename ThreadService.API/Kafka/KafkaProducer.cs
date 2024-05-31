@@ -1,7 +1,9 @@
 ﻿using Confluent.Kafka;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ThreadService.API.Kafka
 {
+    [ExcludeFromCodeCoverage]
     public class KafkaProducer : IKafkaProducer, IDisposable
     {
         private readonly IProducer<Null, string> _producer;
